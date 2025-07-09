@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greeting Page</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Hello!</h1>
+    <p>This is a simple greeting page.</p>
+    <button id="backToDashboard">Back to Dashboard</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // Verify user is authenticated
+        const response = await fetch('/api/v1/protected/profile', {
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          window.location.href = '/login.html';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = '/login.html';
+      }
+    });
+
+    document.getElementById('backToDashboard').addEventListener('click', () => {
+      window.location.href = '/dashboard';
+    });
+  </script>
+</body>
+</html>

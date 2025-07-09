@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Your Profile</h1>
+    <div id="userDetails">
+      <p><strong>Name:</strong> <span id="userName"></span></p>
+      <p><strong>Email:</strong> <span id="userEmail"></span></p>
+    </div>
+    <button id="backToDashboard">Back to Dashboard</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/api/v1/protected/profile', {
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('userName').textContent = data.user.name;
+          document.getElementById('userEmail').textContent = data.user.email;
+        } else {
+          window.location.href = '/login.html';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = '/login.html';
+      }
+    });
+
+    document.getElementById('backToDashboard').addEventListener('click', () => {
+      window.location.href = '/dashboard';
+    });
+  </script>
+</body>
+</html>
