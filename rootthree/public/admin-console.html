@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Console</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Console</h1>
+    <div id="consoleContent">
+      <div class="console-section">
+        <h3>System Commands</h3>
+        <!-- Add your console interface here -->
+      </div>
+    </div>
+    <button id="backBtn">Back to Dashboard</button>
+  </div>
+
+  <script>
+    // Verify admin status
+    fetch('/api/v1/protected/check-admin')
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success || !data.is_admin) {
+          window.location.href = '/dashboard';
+        }
+      });
+
+    document.getElementById('backBtn').addEventListener('click', () => {
+      window.location.href = '/admin/dashboard';
+    });
+  </script>
+</body>
+</html>

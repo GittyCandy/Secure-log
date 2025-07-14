@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/index.css">
+    <style>
+  .admin-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  .admin-btn {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .admin-btn:hover {
+    background: #0056b3;
+  }
+</style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+    <div id="adminInfo">
+      <p><strong>Welcome, Admin:</strong> <span id="adminName"></span></p>
+    </div>
+
+    <h2>User Management</h2>
+    <div id="usersList"></div>
+<div class="admin-actions">
+  <button id="settingsBtn" class="admin-btn">Settings</button>
+  <button id="consoleBtn" class="admin-btn">Console</button>
+</div>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <script>
+     // Fetch and display admin info
+    fetch('/api/v1/protected/profile', {
+      credentials: 'include'
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('adminName').textContent = data.user.name;
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      window.location.href = '/login.html';
+    });
+
+    // Logout button
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      fetch('/api/v1/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+      .then(() => {
+        window.location.href = '/login.html';
+      });
+    });
+        // Add these event listeners
+  document.getElementById('settingsBtn').addEventListener('click', () => {
+    window.location.href = '/admin/settings';
+  });
+
+  document.getElementById('consoleBtn').addEventListener('click', () => {
+    window.location.href = '/admin/console';
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1 id="welcomeMessage">Welcome to your Dashboard</h1>
+    <div class="button-group">
+      <button id="userPageBtn">View User Profile</button>
+      <button id="greetingPageBtn">Greeting Page</button>
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/api/v1/protected/profile', {
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          document.getElementById('welcomeMessage').textContent =
+            `Welcome ${data.user.name}`;
+        } else {
+          window.location.href = '/login.html';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = '/login.html';
+      }
+    });
+
+    // Navigation buttons
+    document.getElementById('userPageBtn').addEventListener('click', () => {
+      window.location.href = '/userpage';
+    });
+
+    document.getElementById('greetingPageBtn').addEventListener('click', () => {
+      window.location.href = '/greeting';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/v1/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          window.location.href = '/login.html';
+        } else {
+          alert('Logout failed');
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    });
+  </script>
+</body>
+</html>

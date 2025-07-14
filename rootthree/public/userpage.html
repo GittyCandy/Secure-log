@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div class="container">
+    <h1>User Profile</h1>
+    <div id="userInfo">
+      <p><strong>Name:</strong> <span id="userName"></span></p>
+      <p><strong>Email:</strong> <span id="userEmail"></span></p>
+<!-- Update the roles display section -->
+<p><strong>Roles:</strong>
+  <span id="userRoles">
+    ${user.is_admin ? 'Admin, ' : ''}
+    ${user.is_buyer ? 'Buyer' : ''}
+    ${user.is_buyer && user.is_seller ? ', ' : ''}
+    ${user.is_seller ? 'Seller' : ''}
+    ${!user.is_admin && !user.is_buyer && !user.is_seller ? 'Regular User' : ''}
+  </span>
+</p>
+    </div>
+    <button id="logoutBtn">Logout</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/api/v1/protected/profile', {
+          credentials: 'include'
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+
+        const data = await response.json();
+
+        if (data.success) {
+          const user = data.user;
+          document.getElementById('userName').textContent = user.name;
+          document.getElementById('userEmail').textContent = user.email;
+
+          const roles = [];
+          if (user.is_buyer) roles.push('Buyer');
+          if (user.is_seller) roles.push('Seller');
+          if (roles.length === 0) roles.push('Regular User');
+
+          document.getElementById('userRoles').textContent = roles.join(', ');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = '/login.html';
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/v1/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          window.location.href = '/login.html';
+        }
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    });
+  </script>
+</body>
+</html>
